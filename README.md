@@ -1,2 +1,2 @@
 To compile using:
-pyinstaller.exe --onefile --noconsole main.py
+<p><b>pyinstaller.exe --onefile --noconsole main.py</b><p>
