@@ -13,7 +13,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(541, 606)
+        MainWindow.resize(541, 601)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.centralwidget)
@@ -91,6 +91,9 @@ class Ui_MainWindow(object):
         self.pushButton_3 = QtWidgets.QPushButton(self.groupBox_2)
         self.pushButton_3.setObjectName("pushButton_3")
         self.gridLayout_2.addWidget(self.pushButton_3, 1, 0, 1, 2)
+        self.checkBox_2 = QtWidgets.QCheckBox(self.groupBox_2)
+        self.checkBox_2.setObjectName("checkBox_2")
+        self.gridLayout_2.addWidget(self.checkBox_2, 1, 2, 1, 1)
         self.verticalLayout.addWidget(self.groupBox_2)
         self.groupBox_3 = QtWidgets.QGroupBox(self.centralwidget)
         self.groupBox_3.setObjectName("groupBox_3")
@@ -128,6 +131,7 @@ class Ui_MainWindow(object):
         self.label_3.setText(_translate("MainWindow", "Путь:"))
         self.pushButton_2.setText(_translate("MainWindow", "Открыть"))
         self.pushButton_3.setText(_translate("MainWindow", "Старт"))
+        self.checkBox_2.setText(_translate("MainWindow", "Реверс"))
         self.groupBox_3.setTitle(_translate("MainWindow", "Output"))
         self.textEdit.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"

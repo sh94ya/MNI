@@ -24,6 +24,7 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.spinBox.valueChanged.connect(self.spinBox_valchange)
         self.pushButton_4.clicked.connect(self.clear)
         self.pushButton_5.clicked.connect(self.safe_rez)
+        self.checkBox_2.clicked.connect(self.checkBox_2clicked)
 
     def browse_folder_excel(self):
         global path_excel
@@ -60,12 +61,20 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
             self.spinBox_2.setEnabled(True)
             self.spinBox_3.setEnabled(True)
     
+    def checkBox_2clicked(self):
+        global flag
+        if self.checkBox_2.checkState() != 0:
+            flag = True
+        else:
+            flag = False
+
+
     def spinBox_valchange(self):
         global index_book
         index_book = self.spinBox.value()
 
     def start(self):
-        global list_1,index_book,col_prov,num_rows,num_col
+        global list_1,index_book,col_prov,num_rows,num_col,flag
         try:
             if path_fusb!='' and path_excel!='':
                 filename, file_extension = os.path.splitext(path_fusb)
@@ -79,15 +88,16 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
                 num_rows = self.spinBox_2.value()
                 num_col = self.spinBox_3.value()
                 col_prov = self.spinBox_4.value()
-                # self.textEdit.setText(self.textEdit.toPlainText() + "\n*****************\n"+ "БД МНИ: "+path_excel+"   FUSB: "+path_fusb+"\n")
-                # str = ff.Read_Excel(path_excel,list_1,index_book,col_prov,num_rows,num_col)
-                # self.textEdit.setText(str)
-                # self.textEdit.setText(self.textEdit.toPlainText() + "\n*****************\n")
-                list_2 = ff.Read_Excel(path_excel,list_1,index_book,col_prov,num_rows,num_col)
-                #self.textEdit.setHtml("<html><head></head><body>")
+                str_rev = ""
+                if flag == False:
+                    list_2 = ff.Read_Excel(path_excel,list_1,index_book,col_prov,num_rows,num_col)
+                    str_rev = ""
+                else:
+                    list_2 = ff.Read_Excel_reverse(path_excel,list_1,index_book,col_prov,num_rows,num_col)  
+                    str_rev = "(Реверсивное отображение)"                  
                 str3 = ""
                 if len(list_2)>0:
-                    str3 += ("<h1>Найдены совпадения для "+path_fusb+"</h1><table><thead><tr><th>№</th><th>Excel</th><th>FUSB</th></tr></thead>")
+                    str3 += ("<h1>"+str_rev+" Найдены совпадения для "+path_fusb+"</h1><table><thead><tr><th>№</th><th>Excel</th><th>FUSB</th></tr></thead>")
                     count = 1
                     for row_list in list_2:
                         str3+=("<tr>") 
@@ -114,7 +124,7 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
                         count+=1
                     str3+=("</table>")
                 else:
-                      str3+=("<h1>Совпадений для "+path_fusb+" не найдено</h1>")
+                      str3+=("<h1>"+str_rev+" Совпадений для "+path_fusb+" не найдено</h1>")
                 self.textEdit.insertHtml(str3)
                 self.textEdit.insertHtml("<hr>")
         except Exception as e:
@@ -130,7 +140,7 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
             with f:
                 f.write(self.textEdit.toPlainText())
                 
-
+flag = False
 list_1 = []
 path_fusb = ''
 path_excel = ''

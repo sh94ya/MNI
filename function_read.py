@@ -12,8 +12,6 @@ def Read_Excel(filename,list_1,ind_book,col_pro,num_rows,num_col):
     try:
         workbook = xlrd.open_workbook(filename)
         worksheet = workbook.sheet_by_index(ind_book-1)
-        #num_rows=worksheet.nrows
-        #num_col=worksheet.ncols
     except BaseException:
         print('Ошибка чтения файла')
         return
@@ -25,10 +23,7 @@ def Read_Excel(filename,list_1,ind_book,col_pro,num_rows,num_col):
                 try:
                     if worksheet.cell(ind_i,col_pro-1).value == ind_j[1] and  ind_j[1] != '':
                         count+=1
-                        #str2 = listToString(ind_j)
                         line_1.append([worksheet.row_values(ind_i),ind_j])
-                        #st += str(count)+") Excel_OUT #"+listToString(worksheet.row_values(ind_i))+"# - FUSB_OUT #"+listToString(ind_j)+"#\n"
-                        #print(count,") ",worksheet.row_values(ind_i),"-",ind_j)
                         break
                 except Exception as e:
                     print('Ошибка:\n', traceback.format_exc())
@@ -36,6 +31,33 @@ def Read_Excel(filename,list_1,ind_book,col_pro,num_rows,num_col):
     except Exception as e:
         print('Ошибка:\n', traceback.format_exc())
     return line_1
+
+def Read_Excel_reverse(filename,list_1,ind_book,col_pro,num_rows,num_col):
+    st = ""
+    line_1 = []
+    try:
+        workbook = xlrd.open_workbook(filename)
+        worksheet = workbook.sheet_by_index(ind_book-1)
+    except BaseException:
+        print('Ошибка чтения файла')
+        return
+    try:
+        ind_i = 0
+        for ind_j in list_1:  
+            count = 0  
+            for ind_i in range(num_rows):
+                try:
+                    if worksheet.cell(ind_i,col_pro-1).value == ind_j[1] and  ind_j[1] != '':
+                        count+=1
+                except Exception as e:
+                    print('Ошибка:\n', traceback.format_exc())
+                    count+=1
+                ind_i+=1
+            if count == 0:
+                line_1.append([[],ind_j])
+    except Exception as e:
+        print('Ошибка:\n', traceback.format_exc())
+    return line_1  
 
 def listToString(s):  
     str1 = ""  
