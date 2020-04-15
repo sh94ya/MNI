@@ -8,6 +8,7 @@ import re
 
 def Read_Excel(filename,list_1,ind_book,col_pro,num_rows,num_col):
     st = ""
+    line_1 = []
     try:
         workbook = xlrd.open_workbook(filename)
         worksheet = workbook.sheet_by_index(ind_book-1)
@@ -25,7 +26,8 @@ def Read_Excel(filename,list_1,ind_book,col_pro,num_rows,num_col):
                     if worksheet.cell(ind_i,col_pro-1).value == ind_j[1] and  ind_j[1] != '':
                         count+=1
                         #str2 = listToString(ind_j)
-                        st += str(count)+") Excel_OUT #"+listToString(worksheet.row_values(ind_i))+"# - FUSB_OUT #"+listToString(ind_j)+"#\n"
+                        line_1.append([worksheet.row_values(ind_i),ind_j])
+                        #st += str(count)+") Excel_OUT #"+listToString(worksheet.row_values(ind_i))+"# - FUSB_OUT #"+listToString(ind_j)+"#\n"
                         #print(count,") ",worksheet.row_values(ind_i),"-",ind_j)
                         break
                 except Exception as e:
@@ -33,13 +35,13 @@ def Read_Excel(filename,list_1,ind_book,col_pro,num_rows,num_col):
             ind_i+=1
     except Exception as e:
         print('Ошибка:\n', traceback.format_exc())
-    return st
+    return line_1
 
 def listToString(s):  
-    str1 = "["  
+    str1 = ""  
     for ele in s:  
-        str1 += str(ele) + " | "  
-    str1+= "]"
+        str1 += str(ele) + "  "  
+    str1+= ""
     return str1  
 
 #Чтение файла fusb в формате txt

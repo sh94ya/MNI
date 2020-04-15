@@ -23,6 +23,7 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.checkBox.clicked.connect(self.checkBox_clicked)
         self.spinBox.valueChanged.connect(self.spinBox_valchange)
         self.pushButton_4.clicked.connect(self.clear)
+        self.pushButton_5.clicked.connect(self.safe_rez)
 
     def browse_folder_excel(self):
         global path_excel
@@ -78,15 +79,57 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
                 num_rows = self.spinBox_2.value()
                 num_col = self.spinBox_3.value()
                 col_prov = self.spinBox_4.value()
-                self.textEdit.setText(self.textEdit.toPlainText() + "\n*****************\n"+ "БД МНИ: "+path_excel+"   FUSB: "+path_fusb+"\n")
-                str = ff.Read_Excel(path_excel,list_1,index_book,col_prov,num_rows,num_col)
-                self.textEdit.setText(str)
-                self.textEdit.setText(self.textEdit.toPlainText() + "\n*****************\n")
+                # self.textEdit.setText(self.textEdit.toPlainText() + "\n*****************\n"+ "БД МНИ: "+path_excel+"   FUSB: "+path_fusb+"\n")
+                # str = ff.Read_Excel(path_excel,list_1,index_book,col_prov,num_rows,num_col)
+                # self.textEdit.setText(str)
+                # self.textEdit.setText(self.textEdit.toPlainText() + "\n*****************\n")
+                list_2 = ff.Read_Excel(path_excel,list_1,index_book,col_prov,num_rows,num_col)
+                #self.textEdit.setHtml("<html><head></head><body>")
+                str3 = ""
+                if len(list_2)>0:
+                    str3 += ("<h1>Найдены совпадения для "+path_fusb+"</h1><table><thead><tr><th>№</th><th>Excel</th><th>FUSB</th></tr></thead>")
+                    count = 1
+                    for row_list in list_2:
+                        str3+=("<tr>") 
+                        str3+=("<td>"+str(count)+"</td>")
+                        ccount = 0
+                        str3+=("<td>") 
+                        for item_row in row_list[0]:
+                            if ccount == col_prov-1:
+                                    str3+=("<b>"+str(item_row)+"</b>")
+                            else:
+                                    str3+=("| "+str(item_row)+" |")
+                            ccount += 1
+                        str3+=("|</td>") 
+                        str3+=("<td>") 
+                        ccount = 0
+                        for item_row in row_list[1]:
+                            if ccount == 1:
+                                 str3+=("<b>"+str(item_row)+"</b>")
+                            else:
+                                 str3+=("| "+str(item_row)+" |")
+                            ccount += 1
+                        str3+=("|</td>") 
+                        str3+=("</tr>")
+                        count+=1
+                    str3+=("</table>")
+                else:
+                      str3+=("<h1>Совпадений для "+path_fusb+" не найдено</h1>")
+                self.textEdit.insertHtml(str3)
+                self.textEdit.insertHtml("<hr>")
         except Exception as e:
             print('Ошибка:\n', traceback.format_exc())
 
     def clear(self):
         self.textEdit.setText("")
+    
+    def safe_rez(self):
+        fname = QtWidgets.QFileDialog.getSaveFileName(self, 'Save file','',"TXT files (*.txt)")
+        if fname[0]:
+            f = open(fname[0], 'w')
+            with f:
+                f.write(self.textEdit.toPlainText())
+                
 
 list_1 = []
 path_fusb = ''
