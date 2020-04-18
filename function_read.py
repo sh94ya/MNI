@@ -47,8 +47,12 @@ def Read_Excel_reverse(filename,list_1,ind_book,col_pro,num_rows,num_col):
             count = 0  
             for ind_i in range(num_rows):
                 try:
-                    if worksheet.cell(ind_i,col_pro-1).value == ind_j[1] and  ind_j[1] != '':
+                    if str(worksheet.cell(ind_i,col_pro-1).value) == ind_j[1]:
                         count+=1
+                        break
+                    if  str(ind_j[1]) == '':
+                        count+=1
+                        break
                 except Exception as e:
                     print('Ошибка:\n', traceback.format_exc())
                     count+=1
@@ -83,6 +87,7 @@ def Read_FUSB_TXT(filename):
                         list_1.append(list_2)
                 except Exception as e:
                     print('Ошибка:\n', traceback.format_exc())
+            parse_txt_list(list_1)
     except Exception as e:
         print('Ошибка:\n', traceback.format_exc())
     return list_1
@@ -128,7 +133,7 @@ def Read_FUSB_HTML(filename):
         print('Ошибка:\n', traceback.format_exc())
     return list_1
 
-##Преобразуем предыдущий распарсенный список
+##Преобразуем предыдущий распарсенный список для html-документов
 def parse_html_list(list):
     list_1 = []
     for ind_i in range(len(list)):
@@ -150,8 +155,26 @@ def parse_html_list(list):
                     print('Ошибка:\n', traceback.format_exc())
                 temp = list[ind_j]
                 temp[0] = ((list[ind_i][0])+" "+ temp[0])
-                print(temp)
                 list_1.append(temp)
                 ind_j+=1
         ind_i+=1
+    return list_1
+
+def parse_txt_list(list):
+    list_1 = []
+    try:
+        del list[0] #удаляем первый элемент с названиями стобцов
+        ind_i = 0
+        for item in list:
+            if len(item) == 2:
+                ind_j = list.index(item)+1
+                try:
+                    while len(list[ind_j]) != 2:
+                        list[ind_j][0] = item[0] + " " + list[ind_j][0]
+                        ind_j += 1
+                except Exception as e:
+                    print('Ошибка:\n', traceback.format_exc())
+                del list[list.index(item)]
+    except Exception as e:
+        print('Ошибка:\n', traceback.format_exc())
     return list_1

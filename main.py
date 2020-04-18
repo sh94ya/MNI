@@ -97,20 +97,24 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
                     str_rev = "(Реверсивное отображение)"                  
                 str3 = ""
                 if len(list_2)>0:
-                    str3 += ("<h1>"+str_rev+" Найдены совпадения для "+path_fusb+"</h1><table><thead><tr><th>№</th><th>Excel</th><th>FUSB</th></tr></thead>")
+                    str3 += ("<h1>"+str_rev+" Найдены совпадения для "+path_fusb+'</h1><table cellspacing="2" border="1" cellpadding="5"><thead><tr><th>№</th>')
+                    if flag == False:
+                        str3 += "<th>Excel</th>"
+                    str3 += "<th>FUSB</th></tr></thead>"
                     count = 1
                     for row_list in list_2:
                         str3+=("<tr>") 
                         str3+=("<td>"+str(count)+"</td>")
                         ccount = 0
-                        str3+=("<td>") 
-                        for item_row in row_list[0]:
-                            if ccount == col_prov-1:
-                                    str3+=("<b>"+str(item_row)+"</b>")
-                            else:
-                                    str3+=("| "+str(item_row)+" |")
-                            ccount += 1
-                        str3+=("|</td>") 
+                        if flag == False:
+                            str3+=("<td>") 
+                            for item_row in row_list[0]:
+                                if ccount == col_prov-1:
+                                        str3+=("<b>"+str(item_row)+"</b>")
+                                else:
+                                        str3+=("| "+str(item_row)+" |")
+                                ccount += 1
+                            str3+=("|</td>") 
                         str3+=("<td>") 
                         ccount = 0
                         for item_row in row_list[1]:
