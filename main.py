@@ -5,6 +5,7 @@ from PyQt5 import QtWidgets
 import design  # Это наш конвертированный файл дизайна
 import os
 import function_read as ff
+from bs4 import BeautifulSoup
 
 class Usage(Exception):
     def __init__(self, msg):
@@ -97,7 +98,7 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
                     str_rev = "(Реверсивное отображение)"                  
                 str3 = ""
                 if len(list_2)>0:
-                    str3 += ("<h1>"+str_rev+" Найдены совпадения для "+path_fusb+'</h1><table cellspacing="2" border="1" cellpadding="5"><thead><tr><th>№</th>')
+                    str3 += ('<div name="header"><p  name="header"><h1>'+str_rev+" Найдены совпадения для "+path_fusb+'</h1></p></div><div name="table"><table cellspacing="2" border="1" cellpadding="5"><thead><tr><th>№</th>')
                     if flag == False:
                         str3 += "<th>Excel</th>"
                     str3 += "<th>FUSB</th></tr></thead>"
@@ -126,11 +127,11 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
                         str3+=("|</td>") 
                         str3+=("</tr>")
                         count+=1
-                    str3+=("</table>")
+                    str3+=("</table></div>")
                 else:
-                      str3+=("<h1>"+str_rev+" Совпадений для "+path_fusb+" не найдено</h1>")
-                self.textEdit.insertHtml(str3)
-                self.textEdit.insertHtml("<hr>")
+                      str3+=('<div name="header"><p align="left"><h1>'+str_rev+" Совпадений для "+path_fusb+' не найдено</h1></p></div><div name="table"></div>')
+                self.textEdit.append(str3)
+                #self.textEdit.append("<hr>")
         except Exception as e:
             print('Ошибка:\n', traceback.format_exc())
 
@@ -138,11 +139,14 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.textEdit.setText("")
     
     def safe_rez(self):
+        global bs4
         fname = QtWidgets.QFileDialog.getSaveFileName(self, 'Save file','',"TXT files (*.txt)")
         if fname[0]:
             f = open(fname[0], 'w')
             with f:
-                f.write(self.textEdit.toPlainText())
+                str1 = ff.output_html_to_txt(self.textEdit.toHtml())
+                #f.write(self.textEdit.toHtml())
+                f.write(str1)
                 
 flag = False
 list_1 = []

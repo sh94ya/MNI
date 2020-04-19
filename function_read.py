@@ -5,6 +5,9 @@ from bs4 import BeautifulSoup
 import sys
 import traceback
 import re
+import pandas as pd
+import numpy as np
+import prettytable
 
 def Read_Excel(filename,list_1,ind_book,col_pro,num_rows,num_col):
     st = ""
@@ -178,3 +181,27 @@ def parse_txt_list(list):
     except Exception as e:
         print('Ошибка:\n', traceback.format_exc())
     return list_1
+
+def output_html_to_txt(html_text):
+    str1 = ""
+    list_header = []
+    list_table = []
+    df = pd.read_html(html_text)
+    try:
+        for item in df:
+            header = list(item.columns.values)
+            tbody = item.values.tolist()
+            x = prettytable.PrettyTable(header)
+            for item_list in tbody:
+                x.add_row(item_list)
+            str1 += x.get_string() + "\n"
+    except Exception as e:
+        print('Ошибка:\n', traceback.format_exc())
+    # soup = BeautifulSoup(html_text, 'lxml')
+    # text = soup.find_all(text=True)
+
+    # tr = soup.table('tr')[2]
+    # for span in tr('span'):
+    #     span.decompose()
+    # print(output)
+    return str1
