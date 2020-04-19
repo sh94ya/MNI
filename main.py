@@ -98,7 +98,7 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
                     str_rev = "(Реверсивное отображение)"                  
                 str3 = ""
                 if len(list_2)>0:
-                    str3 += ('<div name="header"><p  name="header"><h1>'+str_rev+" Найдены совпадения для "+path_fusb+'</h1></p></div><div name="table"><table cellspacing="2" border="1" cellpadding="5"><thead><tr><th>№</th>')
+                    str3 += ('<div name="header"><p  name="header"><h1>'+str_rev+" Найдены совпадения для "+path_fusb+'</h1></p></div><div name="table"><table title="Найдены совпадения для '+path_fusb+ 'cellspacing="2" border="1" cellpadding="5"><thead><tr><th>№</th>')
                     if flag == False:
                         str3 += "<th>Excel</th>"
                     str3 += "<th>FUSB</th></tr></thead>"
@@ -140,13 +140,16 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
     
     def safe_rez(self):
         global bs4
-        fname = QtWidgets.QFileDialog.getSaveFileName(self, 'Save file','',"TXT files (*.txt)")
+        fname = QtWidgets.QFileDialog.getSaveFileName(self, 'Save file','',"TXT files (*.txt);;HTML files (*.html)")
         if fname[0]:
             f = open(fname[0], 'w')
             with f:
-                str1 = ff.output_html_to_txt(self.textEdit.toHtml())
-                #f.write(self.textEdit.toHtml())
-                f.write(str1)
+                filename, file_extension = os.path.splitext(fname[0])
+                if file_extension == '.txt':
+                    str1 = ff.output_html_to_txt(self.textEdit.toHtml())
+                    f.write(str1)
+                if file_extension == '.html':
+                    f.write(self.textEdit.toHtml())
                 
 flag = False
 list_1 = []
