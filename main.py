@@ -21,14 +21,12 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.pushButton.clicked.connect(self.browse_folder_excel)
         self.pushButton_2.clicked.connect(self.browse_folder_fusb)
         self.pushButton_3.clicked.connect(self.start)
-        self.checkBox.clicked.connect(self.checkBox_clicked)
-        self.spinBox.valueChanged.connect(self.spinBox_valchange)
         self.pushButton_4.clicked.connect(self.clear)
         self.pushButton_5.clicked.connect(self.safe_rez)
         self.checkBox_2.clicked.connect(self.checkBox_2clicked)
 
     def browse_folder_excel(self):
-        global path_excel
+        global path_excel,num_rows,num_col
         fname = QtWidgets.QFileDialog.getOpenFileName(self, 'Open file','',"Excel files (*.xls *.xlsx)")
         # открыть диалог выбора директории и установить значение переменной
         # равной пути к выбранной директории
@@ -38,10 +36,8 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
             try:
                 workbook = xlrd.open_workbook(path_excel)
                 worksheet = workbook.sheet_by_index(0)
-                nr = str(worksheet.nrows)
-                nc = str(worksheet.ncols)
-                self.spinBox_2.setValue(worksheet.nrows)
-                self.spinBox_3.setValue(worksheet.ncols)
+                num_rows = (worksheet.nrows)
+                num_col = (worksheet.ncols)
             except BaseException:
                 print('Ошибка чтения файла')
 
@@ -54,25 +50,13 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
             path_fusb = fname[0]
             self.lineEdit_3.setText(path_fusb)
     
-    def checkBox_clicked(self):
-        if self.checkBox.checkState() != 0:
-            self.spinBox_2.setEnabled(False)
-            self.spinBox_3.setEnabled(False)
-        else:
-            self.spinBox_2.setEnabled(True)
-            self.spinBox_3.setEnabled(True)
-    
+   
     def checkBox_2clicked(self):
         global flag
         if self.checkBox_2.checkState() != 0:
             flag = True
         else:
             flag = False
-
-
-    def spinBox_valchange(self):
-        global index_book
-        index_book = self.spinBox.value()
 
     def start(self):
         global list_1,index_book,col_prov,num_rows,num_col,flag
@@ -85,10 +69,6 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
                     list_1 = ff.Read_FUSB_HTML(path_fusb)
                 if file_extension == '.txt':
                     list_1 = ff.Read_FUSB_TXT(path_fusb)
-                index_book = self.spinBox.value()                
-                num_rows = self.spinBox_2.value()
-                num_col = self.spinBox_3.value()
-                col_prov = self.spinBox_4.value()
                 str_rev = ""
                 if flag == False:
                     list_2 = ff.Read_Excel(path_excel,list_1,index_book,col_prov,num_rows,num_col)

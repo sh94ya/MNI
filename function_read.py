@@ -6,7 +6,6 @@ import sys
 import traceback
 import re
 import pandas as pd
-import numpy as np
 import prettytable
 
 def Read_Excel(filename,list_1,ind_book,col_pro,num_rows,num_col):
@@ -24,7 +23,7 @@ def Read_Excel(filename,list_1,ind_book,col_pro,num_rows,num_col):
         for ind_i in range(num_rows):
             for ind_j in list_1:
                 try:
-                    if worksheet.cell(ind_i,col_pro-1).value == ind_j[1] and  ind_j[1] != '':
+                    if worksheet.cell(ind_i,col_pro).value == ind_j[1] and  ind_j[1] != '':
                         count+=1
                         line_1.append([worksheet.row_values(ind_i),ind_j])
                         break
@@ -50,7 +49,7 @@ def Read_Excel_reverse(filename,list_1,ind_book,col_pro,num_rows,num_col):
             count = 0  
             for ind_i in range(num_rows):
                 try:
-                    if str(worksheet.cell(ind_i,col_pro-1).value) == ind_j[1]:
+                    if str(worksheet.cell(ind_i,col_pro).value) == ind_j[1]:
                         count+=1
                         break
                     if  str(ind_j[1]) == '':
@@ -197,11 +196,4 @@ def output_html_to_txt(html_text):
             str1 += x.get_string() + "\n"
     except Exception as e:
         print('Ошибка:\n', traceback.format_exc())
-    # soup = BeautifulSoup(html_text, 'lxml')
-    # text = soup.find_all(text=True)
-
-    # tr = soup.table('tr')[2]
-    # for span in tr('span'):
-    #     span.decompose()
-    # print(output)
     return str1
