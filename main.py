@@ -78,7 +78,7 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
                     str_rev = "(Реверсивное отображение)"                  
                 str3 = ""
                 if len(list_2)>0:
-                    str3 += ('<div name="header"><p  name="header"><h1>'+str_rev+" Найдены совпадения для "+path_fusb+'</h1></p></div><div name="table"><table title="Найдены совпадения для '+path_fusb+ 'cellspacing="2" border="1" cellpadding="5"><thead><tr><th>№</th>')
+                    str3 += ('<h1 name="text_name" style="">'+str_rev+" Найдены совпадения для "+path_fusb+'</h1><table title="Найдены совпадения для '+path_fusb+ 'cellspacing="2" border="1" cellpadding="5"><thead><tr><th>№</th>')
                     if flag == False:
                         str3 += "<th>Excel</th>"
                     str3 += "<th>FUSB</th></tr></thead>"
@@ -90,7 +90,7 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
                         if flag == False:
                             str3+=("<td>") 
                             for item_row in row_list[0]:
-                                if ccount == col_prov-1:
+                                if ccount == col_prov:
                                         str3+=("<b>"+str(item_row)+"</b>")
                                 else:
                                         str3+=("| "+str(item_row)+" |")
@@ -107,9 +107,9 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
                         str3+=("|</td>") 
                         str3+=("</tr>")
                         count+=1
-                    str3+=("</table></div>")
+                    str3+=("</table>")
                 else:
-                      str3+=('<div name="header"><p align="left"><h1>'+str_rev+" Совпадений для "+path_fusb+' не найдено</h1></p></div><div name="table"></div>')
+                      str3+=('<h1 name="text_name" style="">'+str_rev+" Совпадений для "+path_fusb+' не найдено</h1>')
                 self.textEdit.append(str3)
                 #self.textEdit.append("<hr>")
         except Exception as e:
