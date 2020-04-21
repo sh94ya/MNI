@@ -11,6 +11,8 @@ import prettytable
 def Read_Excel(filename,list_1,ind_book,col_pro,num_rows,num_col):
     st = ""
     line_1 = []
+    line_ex = []
+    line_f = []
     try:
         workbook = xlrd.open_workbook(filename)
         worksheet = workbook.sheet_by_index(ind_book-1)
@@ -25,13 +27,18 @@ def Read_Excel(filename,list_1,ind_book,col_pro,num_rows,num_col):
                 try:
                     if worksheet.cell(ind_i,col_pro).value == ind_j[1] and  ind_j[1] != '':
                         count+=1
-                        line_1.append([worksheet.row_values(ind_i),ind_j])
-                        break
+                        #line_1.append([worksheet.row_values(ind_i),ind_j])
+                        line_ex.append(worksheet.row_values(ind_i))
+                        line_f.append(ind_j)
                 except Exception as e:
                     print('Ошибка:\n', traceback.format_exc())
             ind_i+=1
     except Exception as e:
         print('Ошибка:\n', traceback.format_exc())
+    normalize_view_data(line_ex)
+    normalize_view_data(line_f)
+    for i in range(len(line_ex)):
+        line_1.append([line_ex[i],line_f[i]])
     return line_1
 
 def Read_Excel_reverse(filename,list_1,ind_book,col_pro,num_rows,num_col):
@@ -64,6 +71,24 @@ def Read_Excel_reverse(filename,list_1,ind_book,col_pro,num_rows,num_col):
     except Exception as e:
         print('Ошибка:\n', traceback.format_exc())
     return line_1  
+
+def normalize_view_data(list):
+    list_1 = []
+    for item in list[0]:
+        list_1.append(0)
+    #заполняем массив с максимальными размерами строк
+    for item in list:
+        for ob in item:
+            if len(str(ob)) > list_1[item.index(ob)]:
+                list_1[item.index(ob)] = len(str(ob))
+    #дополняем пробелами
+    for i in range(len(list)):
+        for j in range(len(list[i])):
+            if len(str(list[i][j])) < list_1[j]:
+                temp = ''
+                for index in range(list_1[j] - len(str(list[i][j]))):
+                    temp+= '_'
+                list[i][j] = list[i][j] + temp + ""
 
 def listToString(s):  
     str1 = ""  
@@ -191,9 +216,29 @@ def output_html_to_txt(html_text):
             header = list(item.columns.values)
             tbody = item.values.tolist()
             x = prettytable.PrettyTable(header)
+            #равнение столбцов
+            for th in header:
+                x.align[th] = 'l'
             for item_list in tbody:
                 x.add_row(item_list)
             str1 += x.get_string() + "\n"
+    except Exception as e:
+        print('Ошибка:\n', traceback.format_exc())
+    return str1
+
+def output_to_txt(list,header):
+    str1 = ""
+    list_header = []
+    list_table = []
+    try:
+        tbody = list
+        x = prettytable.PrettyTable(header)
+        #равнение столбцов
+        for th in header:
+            x.align[th] = 'l'
+        for item_list in tbody:
+            x.add_row([listToString(item_list[0]),listToString(item_list[1])])
+        str1 += x.get_string() + "\n"
     except Exception as e:
         print('Ошибка:\n', traceback.format_exc())
     return str1

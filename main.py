@@ -89,13 +89,15 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
                         ccount = 0
                         if flag == False:
                             str3+=("<td>") 
+                            #str3+= '<table width="100%"><tr>'                            
                             for item_row in row_list[0]:
                                 if ccount == col_prov:
-                                        str3+=("<b>"+str(item_row)+"</b>")
+                                        str3+=('<b>'+str(item_row)+"</b>")
                                 else:
-                                        str3+=("| "+str(item_row)+" |")
+                                        str3+=('|'+str(item_row)+"|")
                                 ccount += 1
-                            str3+=("|</td>") 
+                           # str3+= "</tr></table>"                                  
+                            str3+=("</td>") 
                         str3+=("<td>") 
                         ccount = 0
                         for item_row in row_list[1]:
@@ -104,13 +106,14 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
                             else:
                                  str3+=("| "+str(item_row)+" |")
                             ccount += 1
-                        str3+=("|</td>") 
+                        str3+=("</td>") 
                         str3+=("</tr>")
                         count+=1
                     str3+=("</table>")
                 else:
                       str3+=('<h1 name="text_name" style="">'+str_rev+" Совпадений для "+path_fusb+' не найдено</h1>')
                 self.textEdit.append(str3)
+                #self.textEdit.append(ff.output_to_txt(list_2,['Excel','FUSB']))
                 #self.textEdit.append("<hr>")
         except Exception as e:
             print('Ошибка:\n', traceback.format_exc())
@@ -128,6 +131,7 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
                 if file_extension == '.txt':
                     str1 = ff.output_html_to_txt(self.textEdit.toHtml())
                     f.write(str1)
+                    #self.textEdit.setPlainText(str1)
                 if file_extension == '.html':
                     f.write(self.textEdit.toHtml())
                 
