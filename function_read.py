@@ -35,15 +35,23 @@ def Read_Excel(filename,list_1,ind_book,col_pro,num_rows,num_col):
             ind_i+=1
     except Exception as e:
         print('Ошибка:\n', traceback.format_exc())
-    normalize_view_data(line_ex)
-    normalize_view_data(line_f)
-    for i in range(len(line_ex)):
-        line_1.append([line_ex[i],line_f[i]])
+    try:
+        if len(line_f) > 0:
+            line_f.insert(0,list_1[0])
+            line_ex.insert(0,worksheet.row_values(0))            
+            normalize_view_data(line_ex)
+            normalize_view_data(line_f)
+        for i in range(len(line_ex)):
+            line_1.append([line_ex[i],line_f[i]])
+    except Exception as e:
+        print('Ошибка:\n', traceback.format_exc())
     return line_1
 
 def Read_Excel_reverse(filename,list_1,ind_book,col_pro,num_rows,num_col):
     st = ""
     line_1 = []
+    line_ex = []
+    line_f = []
     try:
         workbook = xlrd.open_workbook(filename)
         worksheet = workbook.sheet_by_index(ind_book-1)
@@ -67,7 +75,16 @@ def Read_Excel_reverse(filename,list_1,ind_book,col_pro,num_rows,num_col):
                     count+=1
                 ind_i+=1
             if count == 0:
+                line_f.append(ind_j)
                 line_1.append([[],ind_j])
+    except Exception as e:
+        print('Ошибка:\n', traceback.format_exc())
+    try:
+        if len(line_f) > 0:
+            line_f.insert(0,list_1[0])       
+            normalize_view_data(line_f)
+        for i in range(len(line_ex)):
+            line_1.append([[],line_f[i]])
     except Exception as e:
         print('Ошибка:\n', traceback.format_exc())
     return line_1  
@@ -88,7 +105,7 @@ def normalize_view_data(list):
                 temp = ''
                 for index in range(list_1[j] - len(str(list[i][j]))):
                     temp+= '_'
-                list[i][j] = list[i][j] + temp + ""
+                list[i][j] = str(list[i][j]) + temp + ""
 
 def listToString(s):  
     str1 = ""  
@@ -99,7 +116,8 @@ def listToString(s):
 
 #Чтение файла fusb в формате txt
 def Read_FUSB_TXT(filename):
-    list_1 = []
+    global header_fusb
+    list_1 = []  
     try:
         list_1 = []
         with open(filename, 'r') as file:
@@ -113,8 +131,12 @@ def Read_FUSB_TXT(filename):
                     if len(list_2)>0:
                         list_1.append(list_2)
                 except Exception as e:
-                    print('Ошибка:\n', traceback.format_exc())
-            parse_txt_list(list_1)
+                    print('Ошибка:\n', traceback.format_exc())      
+        try:
+            header_fusb = list_1[0]
+        except Exception as e:
+            print('Ошибка:\n', traceback.format_exc())       
+        parse_txt_list(list_1)
     except Exception as e:
         print('Ошибка:\n', traceback.format_exc())
     return list_1
@@ -131,6 +153,7 @@ def Read_FUSB_CSV(filename):
                 for cell in row:
                     list_2.append(cell)
                 list_1.append(list_2)
+        del list_1[0]
     except Exception as e:
         print('Ошибка:\n', traceback.format_exc())
     return list_1
@@ -163,6 +186,7 @@ def Read_FUSB_HTML(filename):
 ##Преобразуем предыдущий распарсенный список для html-документов
 def parse_html_list(list):
     list_1 = []
+    list_1.append(list[0])
     for ind_i in range(len(list)):
         if len(list[ind_i]) == 1:
             ind_j = ind_i+1
@@ -190,7 +214,7 @@ def parse_html_list(list):
 def parse_txt_list(list):
     list_1 = []
     try:
-        del list[0] #удаляем первый элемент с названиями стобцов
+        #del list[0] #удаляем первый элемент с названиями стобцов
         ind_i = 0
         for item in list:
             if len(item) == 2:
@@ -214,13 +238,15 @@ def output_html_to_txt(html_text):
     try:
         for item in df:
             header = list(item.columns.values)
+            str1+= "*****************"+list(item.columns.values)[0]+"*****************\n"
             tbody = item.values.tolist()
-            x = prettytable.PrettyTable(header)
+            x = prettytable.PrettyTable(tbody[0])
             #равнение столбцов
-            for th in header:
+            for th in tbody[0]:
                 x.align[th] = 'l'
             for item_list in tbody:
-                x.add_row(item_list)
+                if tbody.index(item_list)!=0:
+                    x.add_row(item_list)
             str1 += x.get_string() + "\n"
     except Exception as e:
         print('Ошибка:\n', traceback.format_exc())
