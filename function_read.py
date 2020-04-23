@@ -5,7 +5,6 @@ from bs4 import BeautifulSoup
 import sys
 import traceback
 import re
-import pandas as pd
 import prettytable
 
 def Read_Excel(filename,list_1,ind_book,col_pro,num_rows,num_col):
@@ -104,7 +103,7 @@ def normalize_view_data(list):
             if len(str(list[i][j])) < list_1[j]:
                 temp = ''
                 for index in range(list_1[j] - len(str(list[i][j]))):
-                    temp+= '_'
+                    temp+= ' '
                 list[i][j] = str(list[i][j]) + temp + ""
 
 def listToString(s):  
@@ -234,22 +233,33 @@ def output_html_to_txt(html_text):
     str1 = ""
     list_header = []
     list_table = []
-    df = pd.read_html(html_text)
-    try:
-        for item in df:
-            header = list(item.columns.values)
-            str1+= "*****************"+list(item.columns.values)[0]+"*****************\n"
-            tbody = item.values.tolist()
-            x = prettytable.PrettyTable(tbody[0])
-            #равнение столбцов
-            for th in tbody[0]:
-                x.align[th] = 'l'
-            for item_list in tbody:
-                if tbody.index(item_list)!=0:
-                    x.add_row(item_list)
-            str1 += x.get_string() + "\n"
-    except Exception as e:
-        print('Ошибка:\n', traceback.format_exc())
+    soup = BeautifulSoup(html_text,'lxml')
+    #Получаем список таблиц
+    list_table = soup.find_all("table")
+    #Проходим по всем таблицам
+    for table_index in range(len(list_table)):
+        soup = BeautifulSoup(str(list_table[table_index]))
+        #Проходим по строкам
+        list_tr = soup.find_all("tr")
+        for ind_tr in range(len(list_tr)):
+            soup_td = BeautifulSoup(str(list_tr[ind_tr]))
+            list_td = soup_td.find_all("td")
+            if ind_tr == 0:
+                str1+= "*****************"+str(list_td[0].text.replace('\n',''))+"*****************\n"
+            if ind_tr == 1:
+                #проходим по наименованием столбцов
+                th = []
+                for ind_th in list_td:
+                    th.append(ind_th.text.replace('\n',''))
+                x = prettytable.PrettyTable(th)
+                for ind_th in th:
+                    x.align[ind_th] = 'l'
+            if ind_tr!=0 and ind_tr!=1:
+                td = []
+                for ind_td in list_td:
+                    td.append(ind_td.text)
+                x.add_row(td)
+        str1 += x.get_string() + "\n"
     return str1
 
 def output_to_txt(list,header):

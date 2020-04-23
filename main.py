@@ -88,28 +88,28 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
                     count = 0
                     for row_list in list_2:
                         str3+=('<tr>')
-                        str3+=('<td align="center">'+str(count)+'</td>')
+                        str3+=('<td width="20%"><pre>'+str(count)+'</pre></td>')
                         ccount = 0
                         if flag == False:
-                            str3+=("<td>") 
+                            str3+=("<td><pre>") 
                             #str3+= '<table width="100%"><tr>'                            
                             for item_row in row_list[0]:
                                 if ccount == col_prov:
-                                        str3+=('<b>'+str(item_row)+"|</b>")
+                                        str3+=('<font size="4"><b>'+str(item_row)+"|</b></font>")
                                 else:
                                         str3+=(''+str(item_row)+"|")
                                 ccount += 1
                            # str3+= "</tr></table>"                                  
-                            str3+=("</td>") 
-                        str3+=("<td>") 
+                            str3+=("</pre></td>") 
+                        str3+=("<td><pre>") 
                         ccount = 0
                         for item_row in row_list[1]:
                             if ccount == 1:
-                                 str3+=("<b>"+str(item_row)+"|</b>")
+                                 str3+=('<font size="4"><b>'+str(item_row)+"|</b></font>")
                             else:
                                  str3+=(""+str(item_row)+" |")
                             ccount += 1
-                        str3+=("</td>") 
+                        str3+=("</pre></td>") 
                         str3+=("</tr>")
                         count+=1
                     str3+=("</table><br>")
