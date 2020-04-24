@@ -114,7 +114,7 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
                         count+=1
                     str3+=("</table><br>")
                 else:
-                      str3+=('<table cellspacing="2" border="1" cellpadding="5"><tr><td align="center" colspan="3"><b>'+str_rev+" Cовпадени для "+path_fusb+' не найдено</b></td></tr></table><br>')
+                      str3+=('<table cellspacing="2" border="1" cellpadding="5"><tr><td align="center" colspan="3"><b>'+str_rev+" Cовпадений для "+path_fusb+' не найдено</b></td></tr></table><br>')
                 self.textEdit.append(str3)
                 #self.textEdit.append(ff.output_to_txt(list_2,['Excel','FUSB']))
                 #self.textEdit.append("<hr>")

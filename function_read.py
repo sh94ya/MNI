@@ -8,7 +8,6 @@ import re
 import prettytable
 
 def Read_Excel(filename,list_1,ind_book,col_pro,num_rows,num_col):
-    st = ""
     line_1 = []
     line_ex = []
     line_f = []
@@ -24,7 +23,7 @@ def Read_Excel(filename,list_1,ind_book,col_pro,num_rows,num_col):
         for ind_i in range(num_rows):
             for ind_j in list_1:
                 try:
-                    if worksheet.cell(ind_i,col_pro).value == ind_j[1] and  ind_j[1] != '':
+                    if str(worksheet.cell(ind_i,col_pro).value).upper() == str(ind_j[1]).upper() and  ind_j[1] != '':
                         count+=1
                         #line_1.append([worksheet.row_values(ind_i),ind_j])
                         line_ex.append(worksheet.row_values(ind_i))
@@ -47,7 +46,6 @@ def Read_Excel(filename,list_1,ind_book,col_pro,num_rows,num_col):
     return line_1
 
 def Read_Excel_reverse(filename,list_1,ind_book,col_pro,num_rows,num_col):
-    st = ""
     line_1 = []
     line_ex = []
     line_f = []
@@ -63,7 +61,7 @@ def Read_Excel_reverse(filename,list_1,ind_book,col_pro,num_rows,num_col):
             count = 0  
             for ind_i in range(num_rows):
                 try:
-                    if str(worksheet.cell(ind_i,col_pro).value) == ind_j[1]:
+                    if str(worksheet.cell(ind_i,col_pro).value).upper() == str(ind_j[1]).upper():
                         count+=1
                         break
                     if  str(ind_j[1]) == '':
@@ -259,7 +257,8 @@ def output_html_to_txt(html_text):
                 for ind_td in list_td:
                     td.append(ind_td.text)
                 x.add_row(td)
-        str1 += x.get_string() + "\n"
+        if len(list_tr) > 1:
+            str1 += x.get_string() + "\n"
     return str1
 
 def output_to_txt(list,header):
