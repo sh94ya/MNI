@@ -1,0 +1,6 @@
+/__pycache__
+/.vs
+/.vscode
+/dst
+/build
+main.spec

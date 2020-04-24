@@ -88,48 +88,53 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
                 index_book = self.spinBox.value()                
                 num_rows = self.spinBox_2.value()
                 num_col = self.spinBox_3.value()
-                col_prov = self.spinBox_4.value()
+                col_prov = self.spinBox_4.value()-1
                 str_rev = ""
+                colspan = 3
                 if flag == False:
                     list_2 = ff.Read_Excel(path_excel,list_1,index_book,col_prov,num_rows,num_col)
                     str_rev = ""
+                    colspan = 3
                 else:
                     list_2 = ff.Read_Excel_reverse(path_excel,list_1,index_book,col_prov,num_rows,num_col)  
-                    str_rev = "(Реверсивное отображение)"                  
+                    str_rev = "(Реверсивное отображение)"  
+                    colspan = 2                
                 str3 = ""
                 if len(list_2)>0:
-                    str3 += ('<div name="header"><p  name="header"><h1>'+str_rev+" Найдены совпадения для "+path_fusb+'</h1></p></div><div name="table"><table title="Найдены совпадения для '+path_fusb+ 'cellspacing="2" border="1" cellpadding="5"><thead><tr><th>№</th>')
+                    str3 += ('<table cellspacing="2" border="1" cellpadding="5"><tr><td align="center" colspan="'+str(colspan)+'"><b>'+str_rev+" Найдены совпадения для "+path_fusb+'</b></td></tr><thead><tr bgcolor="#8a7f8e"><th>№</th>')
                     if flag == False:
                         str3 += "<th>Excel</th>"
                     str3 += "<th>FUSB</th></tr></thead>"
-                    count = 1
+                    count = 0
                     for row_list in list_2:
-                        str3+=("<tr>") 
-                        str3+=("<td>"+str(count)+"</td>")
+                        str3+=('<tr>')
+                        str3+=('<td width="20%"><pre>'+str(count)+'</pre></td>')
                         ccount = 0
                         if flag == False:
-                            str3+=("<td>") 
+                            str3+=("<td><pre>") 
+                            #str3+= '<table width="100%"><tr>'                            
                             for item_row in row_list[0]:
-                                if ccount == col_prov-1:
-                                        str3+=("<b>"+str(item_row)+"</b>")
+                                if ccount == col_prov:
+                                        str3+=('<font size="4"><b>'+str(item_row)+"|</b></font>")
                                 else:
-                                        str3+=("| "+str(item_row)+" |")
+                                        str3+=(''+str(item_row)+"|")
                                 ccount += 1
-                            str3+=("|</td>") 
-                        str3+=("<td>") 
+                           # str3+= "</tr></table>"                                  
+                            str3+=("</pre></td>") 
+                        str3+=("<td><pre>") 
                         ccount = 0
                         for item_row in row_list[1]:
                             if ccount == 1:
-                                 str3+=("<b>"+str(item_row)+"</b>")
+                                 str3+=('<font size="4"><b>'+str(item_row)+"|</b></font>")
                             else:
-                                 str3+=("| "+str(item_row)+" |")
+                                 str3+=(""+str(item_row)+" |")
                             ccount += 1
-                        str3+=("|</td>") 
+                        str3+=("</pre></td>") 
                         str3+=("</tr>")
                         count+=1
-                    str3+=("</table></div>")
+                    str3+=("</table><br>")
                 else:
-                      str3+=('<div name="header"><p align="left"><h1>'+str_rev+" Совпадений для "+path_fusb+' не найдено</h1></p></div><div name="table"></div>')
+                      str3+=('<table cellspacing="2" border="1" cellpadding="5"><tr><td align="center" colspan="3"><b>'+str_rev+" Cовпадений для "+path_fusb+' не найдено</b></td></tr></table><br>')
                 self.textEdit.append(str3)
                 #self.textEdit.append("<hr>")
         except Exception as e:
@@ -151,6 +156,7 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
                 if file_extension == '.html':
                     f.write(self.textEdit.toHtml())
                 
+####varible####                
 flag = False
 list_1 = []
 path_fusb = ''
@@ -159,6 +165,9 @@ index_book = 1
 num_rows = 0
 num_col = 0
 col_prov = 1
+header_fusb = []
+header_excel = []
+###############  
 def main():
     list_1 = []
     app = QtWidgets.QApplication(sys.argv)  # Новый экземпляр QApplication
