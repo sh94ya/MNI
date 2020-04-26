@@ -27,6 +27,19 @@
        <string>БД МНИ</string>
       </property>
       <layout class="QGridLayout" name="gridLayout">
+       <item row="3" column="0" colspan="2">
+        <widget class="QSpinBox" name="spinBox_4">
+         <property name="minimum">
+          <number>1</number>
+         </property>
+         <property name="maximum">
+          <number>10000</number>
+         </property>
+         <property name="value">
+          <number>2</number>
+         </property>
+        </widget>
+       </item>
        <item row="3" column="2">
         <widget class="QSpinBox" name="spinBox">
          <property name="minimum">
@@ -47,34 +60,6 @@
          </property>
         </widget>
        </item>
-       <item row="3" column="4">
-        <widget class="QLabel" name="label_6">
-         <property name="text">
-          <string>x</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0">
-        <widget class="QLabel" name="label">
-         <property name="text">
-          <string>Путь:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="8">
-        <widget class="QPushButton" name="pushButton">
-         <property name="text">
-          <string>Открыть</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="4" colspan="3">
-        <widget class="QLabel" name="label_5">
-         <property name="text">
-          <string>Кол-во столбцов</string>
-         </property>
-        </widget>
-       </item>
        <item row="1" column="0" colspan="2">
         <widget class="QLabel" name="label_2">
          <property name="toolTip">
@@ -85,58 +70,44 @@
          </property>
         </widget>
        </item>
-       <item row="3" column="7" colspan="2">
+       <item row="0" column="0">
+        <widget class="QLabel" name="label">
+         <property name="maximumSize">
+          <size>
+           <width>29</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Путь:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="4">
+        <widget class="QPushButton" name="pushButton">
+         <property name="maximumSize">
+          <size>
+           <width>75</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Открыть</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="3" colspan="2">
         <widget class="QCheckBox" name="checkBox">
          <property name="text">
-          <string>Автоопределение</string>
+          <string>Заголовок</string>
          </property>
          <property name="checked">
           <bool>true</bool>
          </property>
         </widget>
        </item>
-       <item row="0" column="1" colspan="7">
+       <item row="0" column="1" colspan="3">
         <widget class="QLineEdit" name="lineEdit"/>
-       </item>
-       <item row="1" column="3">
-        <widget class="QLabel" name="label_4">
-         <property name="text">
-          <string>Кол-во строк</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="3">
-        <widget class="QSpinBox" name="spinBox_2">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="maximum">
-          <number>1000000000</number>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="5" colspan="2">
-        <widget class="QSpinBox" name="spinBox_3">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="maximum">
-          <number>10000</number>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="0" colspan="2">
-        <widget class="QSpinBox" name="spinBox_4">
-         <property name="minimum">
-          <number>1</number>
-         </property>
-         <property name="maximum">
-          <number>10000</number>
-         </property>
-         <property name="value">
-          <number>2</number>
-         </property>
-        </widget>
        </item>
       </layout>
      </widget>
@@ -155,6 +126,12 @@
       <layout class="QGridLayout" name="gridLayout_2">
        <item row="0" column="0">
         <widget class="QLabel" name="label_3">
+         <property name="maximumSize">
+          <size>
+           <width>29</width>
+           <height>16777215</height>
+          </size>
+         </property>
          <property name="text">
           <string>Путь:</string>
          </property>
@@ -165,6 +142,12 @@
        </item>
        <item row="0" column="2">
         <widget class="QPushButton" name="pushButton_2">
+         <property name="maximumSize">
+          <size>
+           <width>75</width>
+           <height>16777215</height>
+          </size>
+         </property>
          <property name="text">
           <string>Открыть</string>
          </property>

@@ -7,7 +7,7 @@ import traceback
 import re
 import prettytable
 
-def Read_Excel(filename,list_1,ind_book,col_pro,num_rows,num_col):
+def Read_Excel(filename,list_1,ind_book,col_pro,num_rows,num_col,flag_zag):
     line_1 = []
     line_ex = []
     line_f = []
@@ -18,7 +18,7 @@ def Read_Excel(filename,list_1,ind_book,col_pro,num_rows,num_col):
         print('Ошибка чтения файла')
         return
     try:
-        ind_i = 0
+        ind_i = flag_zag
         count = 0
         for ind_i in range(num_rows):
             for ind_j in list_1:
@@ -36,7 +36,13 @@ def Read_Excel(filename,list_1,ind_book,col_pro,num_rows,num_col):
     try:
         if len(line_f) > 0:
             line_f.insert(0,list_1[0])
-            line_ex.insert(0,worksheet.row_values(0))            
+            if flag_zag == 1:
+                line_ex.insert(0,worksheet.row_values(0))
+            else:
+                a = []
+                for i in range(len(line_ex[1])):
+                    a.append('')           
+                line_ex.insert(0,a)
             normalize_view_data(line_ex)
             normalize_view_data(line_f)
         for i in range(len(line_ex)):
@@ -45,7 +51,7 @@ def Read_Excel(filename,list_1,ind_book,col_pro,num_rows,num_col):
         print('Ошибка:\n', traceback.format_exc())
     return line_1
 
-def Read_Excel_reverse(filename,list_1,ind_book,col_pro,num_rows,num_col):
+def Read_Excel_reverse(filename,list_1,ind_book,col_pro,num_rows,num_col,flag_zag):
     line_1 = []
     line_ex = []
     line_f = []
@@ -56,7 +62,7 @@ def Read_Excel_reverse(filename,list_1,ind_book,col_pro,num_rows,num_col):
         print('Ошибка чтения файла')
         return
     try:
-        ind_i = 0
+        ind_i =  flag_zag
         for ind_j in list_1:  
             count = 0  
             for ind_i in range(num_rows):
