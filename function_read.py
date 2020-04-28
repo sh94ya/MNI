@@ -1,11 +1,58 @@
 import xlrd
 import csv
-import getopt
 from bs4 import BeautifulSoup
 import sys
 import traceback
 import re
 import prettytable
+
+def Output_table(list_2,flag,path_fusb,col_prov):
+    str3 = ""
+    str_rev = ""
+    colspan =3
+    if flag == False:
+        str_rev = ""
+        colspan = 3
+    else:
+        str_rev = "(Реверсивное)"
+        colspan = 2
+
+    if len(list_2)>0:
+        str3 += ('<table cellspacing="2" border="1" cellpadding="5"><tr><td align="center" colspan="'+str(colspan)+'"><b>'+str_rev+" Найдены совпадения для "+path_fusb+'</b></td></tr><thead><tr bgcolor="#8a7f8e"><th>№</th>')
+        if flag == False:
+            str3 += "<th>Excel</th>"
+        str3 += "<th>FUSB</th></tr></thead>"
+        count = 0
+        for row_list in list_2:
+            str3+=('<tr>')
+            str3+=('<td width="20%"><pre>'+str(count)+'</pre></td>')
+            ccount = 0
+            if flag == False:
+                str3+=("<td><pre>") 
+                #str3+= '<table width="100%"><tr>'                            
+                for item_row in row_list[0]:
+                    if ccount == col_prov:
+                            str3+=('<font size="4"><b>'+str(item_row)+"|</b></font>")
+                    else:
+                            str3+=(''+str(item_row)+"|")
+                    ccount += 1
+                # str3+= "</tr></table>"                                  
+                str3+=("</pre></td>") 
+            str3+=("<td><pre>") 
+            ccount = 0
+            for item_row in row_list[1]:
+                if ccount == 1:
+                        str3+=('<font size="4"><b>'+str(item_row)+"|</b></font>")
+                else:
+                        str3+=(""+str(item_row)+" |")
+                ccount += 1
+            str3+=("</pre></td>") 
+            str3+=("</tr>")
+            count+=1
+        str3+=("</table><br>")
+    else:
+        str3+=('<table cellspacing="2" border="1" cellpadding="5"><tr><td align="center" colspan="3"><b>'+str_rev+" Cовпадений для "+path_fusb+' не найдено</b></td></tr></table><br>')
+    return str3
 
 def Read_Excel(filename,list_1,ind_book,col_pro,num_rows,num_col):
     line_1 = []
@@ -23,7 +70,13 @@ def Read_Excel(filename,list_1,ind_book,col_pro,num_rows,num_col):
         for ind_i in range(num_rows):
             for ind_j in list_1:
                 try:
-                    if str(worksheet.cell(ind_i,col_pro).value).upper() == str(ind_j[1]).upper() and  ind_j[1] != '':
+                    value_1 = str(worksheet.cell(ind_i,col_pro).value).upper()
+                    value_2 = str(ind_j[1]).upper()
+                    value_2 = value_2.rstrip()
+                    value_2 = value_2.lstrip()
+                    value_1 = value_1.rstrip()
+                    value_1 = value_1.lstrip()
+                    if value_1 == value_2 and value_2 != '':
                         count+=1
                         #line_1.append([worksheet.row_values(ind_i),ind_j])
                         line_ex.append(worksheet.row_values(ind_i))
@@ -61,10 +114,13 @@ def Read_Excel_reverse(filename,list_1,ind_book,col_pro,num_rows,num_col):
             count = 0  
             for ind_i in range(num_rows):
                 try:
-                    if str(worksheet.cell(ind_i,col_pro).value).upper() == str(ind_j[1]).upper():
-                        count+=1
-                        break
-                    if  str(ind_j[1]) == '':
+                    value_1 = str(worksheet.cell(ind_i,col_pro).value).upper()
+                    value_2 = str(ind_j[1]).upper()
+                    value_2 = value_2.rstrip()
+                    value_2 = value_2.lstrip()
+                    value_1 = value_1.rstrip()
+                    value_1 = value_1.lstrip()
+                    if value_1 == value_2 or value_2 == '':
                         count+=1
                         break
                 except Exception as e:

@@ -23,7 +23,7 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.pushButton_3.clicked.connect(self.start)
         self.pushButton_4.clicked.connect(self.clear)
         self.pushButton_5.clicked.connect(self.safe_rez)
-        self.checkBox_2.clicked.connect(self.checkBox_2clicked)
+        # self.checkBox_2.clicked.connect(self.checkBox_2clicked)
 
     def browse_folder_excel(self):
         global path_excel,num_rows,num_col
@@ -51,12 +51,12 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
             self.lineEdit_3.setText(path_fusb)
     
    
-    def checkBox_2clicked(self):
-        global flag
-        if self.checkBox_2.checkState() != 0:
-            flag = True
-        else:
-            flag = False
+    # def checkBox_2clicked(self):
+    #     global flag
+    #     if self.checkBox_2.checkState() != 0:
+    #         flag = True
+    #     else:
+    #         flag = False
 
     def start(self):
         global list_1,index_book,col_prov,num_rows,num_col,flag
@@ -69,74 +69,37 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
                     list_1 = ff.Read_FUSB_HTML(path_fusb)
                 if file_extension == '.txt':
                     list_1 = ff.Read_FUSB_TXT(path_fusb)
-                str_rev = ""
-                colspan = 3
-                if flag == False:
-                    list_2 = ff.Read_Excel(path_excel,list_1,index_book,col_prov,num_rows,num_col)
-                    str_rev = ""
-                    colspan = 3
-                else:
-                    list_2 = ff.Read_Excel_reverse(path_excel,list_1,index_book,col_prov,num_rows,num_col)  
-                    str_rev = "(Реверсивное отображение)" 
-                    colspan = 2                 
-                str3 = ""
-                if len(list_2)>0:
-                    str3 += ('<table cellspacing="2" border="1" cellpadding="5"><tr><td align="center" colspan="'+str(colspan)+'"><b>'+str_rev+" Найдены совпадения для "+path_fusb+'</b></td></tr><thead><tr bgcolor="#8a7f8e"><th>№</th>')
-                    if flag == False:
-                        str3 += "<th>Excel</th>"
-                    str3 += "<th>FUSB</th></tr></thead>"
-                    count = 0
-                    for row_list in list_2:
-                        str3+=('<tr>')
-                        str3+=('<td width="20%"><pre>'+str(count)+'</pre></td>')
-                        ccount = 0
-                        if flag == False:
-                            str3+=("<td><pre>") 
-                            #str3+= '<table width="100%"><tr>'                            
-                            for item_row in row_list[0]:
-                                if ccount == col_prov:
-                                        str3+=('<font size="4"><b>'+str(item_row)+"|</b></font>")
-                                else:
-                                        str3+=(''+str(item_row)+"|")
-                                ccount += 1
-                           # str3+= "</tr></table>"                                  
-                            str3+=("</pre></td>") 
-                        str3+=("<td><pre>") 
-                        ccount = 0
-                        for item_row in row_list[1]:
-                            if ccount == 1:
-                                 str3+=('<font size="4"><b>'+str(item_row)+"|</b></font>")
-                            else:
-                                 str3+=(""+str(item_row)+" |")
-                            ccount += 1
-                        str3+=("</pre></td>") 
-                        str3+=("</tr>")
-                        count+=1
-                    str3+=("</table><br>")
-                else:
-                      str3+=('<table cellspacing="2" border="1" cellpadding="5"><tr><td align="center" colspan="3"><b>'+str_rev+" Cовпадений для "+path_fusb+' не найдено</b></td></tr></table><br>')
-                self.textEdit.append(str3)
-                #self.textEdit.append(ff.output_to_txt(list_2,['Excel','FUSB']))
-                #self.textEdit.append("<hr>")
+                #####Вывод в text_edit########        
+                list_2 = ff.Read_Excel(path_excel,list_1,index_book,col_prov,num_rows,num_col)       
+                self.textEdit.append(ff.Output_table(list_2,False,path_fusb,col_prov))
+                list_3 = ff.Read_Excel_reverse(path_excel,list_1,index_book,col_prov,num_rows,num_col)
+                self.textEdit_2.append(ff.Output_table(list_3,True,path_fusb,col_prov))
         except Exception as e:
             print('Ошибка:\n', traceback.format_exc())
 
     def clear(self):
         self.textEdit.setText("")
+        self.textEdit_2.setText("")
     
     def safe_rez(self):
         global bs4
         fname = QtWidgets.QFileDialog.getSaveFileName(self, 'Save file','',"TXT files (*.txt);;HTML files (*.html)")
         if fname[0]:
-            f = open(fname[0], 'w')
+            filename, file_extension = os.path.splitext(fname[0])
+            f = open(filename+'(Совпадающие c БД)'+file_extension, 'w')
             with f:
-                filename, file_extension = os.path.splitext(fname[0])
                 if file_extension == '.txt':
                     str1 = ff.output_html_to_txt(self.textEdit.toHtml())
                     f.write(str1)
-                    #self.textEdit.setPlainText(str1)
                 if file_extension == '.html':
                     f.write(self.textEdit.toHtml())
+            f = open(filename+'(Несовпадающие c БД)'+file_extension, 'w')
+            with f:
+                if file_extension == '.txt':
+                    str1 = ff.output_html_to_txt(self.textEdit_2.toHtml())
+                    f.write(str1)
+                if file_extension == '.html':
+                    f.write(self.textEdit_2.toHtml())
 
 ####varible####                
 flag = False
